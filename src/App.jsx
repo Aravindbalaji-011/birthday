@@ -54,7 +54,8 @@ export default function App() {
         <h1>
           Counting down
           <br />
-          <span>to your birthday Pavi</span>
+          <span>to your birthday </span>
+          <span>Paviii</span>
         </h1>
 
         <p className="subtitle">
