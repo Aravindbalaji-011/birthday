@@ -79,13 +79,13 @@ function App() {
             </h1>
 
             <p className="birthday-message">
-              Happy Birthday, my love ♡
+              Happy Birthday, my love  ♡
             </p>
           </>
         ) : (
           <>
             <h1 className="birthday-title">
-              Something beautiful is coming...
+              Happy Birthday, my love paviii
             </h1>
 
             <p className="birthday-message">
