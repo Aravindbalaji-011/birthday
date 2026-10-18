@@ -1,125 +1,148 @@
+
 import { useEffect, useRef, useState } from "react";
 import "./App.css";
+import BirthdayHome from "./BirthdayHome";
 
-const BIRTHDAY = new Date("2026-10-23T00:00:00+05:30");
-
-function getTimeLeft() {
-  const difference = Math.max(0, BIRTHDAY.getTime() - Date.now());
-
-  return {
-    days: Math.floor(difference / (1000 * 60 * 60 * 24)),
-    hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
-    minutes: Math.floor((difference / (1000 * 60)) % 60),
-    seconds: Math.floor((difference / 1000) % 60),
-    finished: difference === 0,
-  };
-}
-
-function App() {
-  const [timeLeft, setTimeLeft] = useState(getTimeLeft);
+export default function App() {
+  const [showIntro, setShowIntro] = useState(true);
+  const [introPhase, setIntroPhase] = useState("start");
+  const [countdown, setCountdown] = useState(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const audioRef = useRef(null);
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      setTimeLeft(getTimeLeft());
-    }, 1000);
+    if (!showIntro) return;
 
-    const audio = audioRef.current;
+    const timers = [];
 
-    if (audio) {
-      audio.volume = 0.7;
+    timers.push(
+      setTimeout(() => setIntroPhase("reveal"), 100)
+    );
 
-      audio.play().catch(() => {
-        setIsPlaying(false);
-      });
-    }
+    // Show 5, 4, 3, 2, 1 near the end of the intro.
+    timers.push(
+      setTimeout(() => setCountdown(5), 3500)
+    );
 
-    return () => clearInterval(timer);
-  }, []);
+    [4, 3, 2, 1, 0].forEach((number, index) => {
+      timers.push(
+        setTimeout(() => setCountdown(number), 4300 + index * 650)
+      );
+    });
+
+    timers.push(
+      setTimeout(() => setIntroPhase("exit"), 7600)
+    );
+
+    timers.push(
+      setTimeout(() => setShowIntro(false), 8500)
+    );
+
+    return () => timers.forEach(clearTimeout);
+  }, [showIntro]);
 
   async function toggleMusic() {
     const audio = audioRef.current;
-
     if (!audio) return;
 
     if (audio.paused) {
       try {
         await audio.play();
       } catch (error) {
-        console.error("Music playback failed:", error);
+        console.error("Could not play birthday music:", error);
       }
     } else {
       audio.pause();
     }
   }
 
+  function skipIntro() {
+    setShowIntro(false);
+  }
+
   return (
     <main className="birthday-page">
-      <div className="soft-glow glow-one" />
-      <div className="soft-glow glow-two" />
+      <div className="soft-glow glow-one" aria-hidden="true" />
+      <div className="soft-glow glow-two" aria-hidden="true" />
 
-      <section className="countdown-card">
-        <div className="heart-decoration" aria-hidden="true">
-          ♡
-        </div>
+      {!showIntro && <BirthdayHome />}
 
-        <p className="eyebrow">
-          A LITTLE COUNTDOWN FOR SOMEONE SPECIAL
-        </p>
+      {showIntro && (
+        <section
+          className={`cinema-intro intro-${introPhase}`}
+          aria-label="PAVIII cinematic introduction"
+        >
+          <div className="intro-grain" aria-hidden="true" />
+          <div className="intro-red-sweep" aria-hidden="true" />
+          <div className="intro-light intro-light-one" aria-hidden="true" />
+          <div className="intro-light intro-light-two" aria-hidden="true" />
 
-        <div className="flower-decoration" aria-hidden="true">
-          🌸 ✿ 🌷
-        </div>
+          <div className="intro-ring intro-ring-one" aria-hidden="true" />
+          <div className="intro-ring intro-ring-two" aria-hidden="true" />
 
-        {timeLeft.finished ? (
-          <>
-            <h1 className="birthday-title">
-              It's your special day!
-            </h1>
-
-            <p className="birthday-message">
-              Happy Birthday, my love  ♡
-            </p>
-          </>
-        ) : (
-          <>
-            <h1 className="birthday-title">
-              Happy Birthday, my love paviii
-            </h1>
-
-            <p className="birthday-message">
-              Counting every second until your special day.
+          <div className="intro-content">
+            <p className="intro-studio">
+              A SPECIAL PRESENTATION
             </p>
 
-            <div
-              className="countdown-grid"
-              aria-label="Time remaining until the birthday"
-            >
-              <TimeBox value={timeLeft.days} label="Days" />
-              <TimeBox value={timeLeft.hours} label="Hours" />
-              <TimeBox value={timeLeft.minutes} label="Minutes" />
-              <TimeBox value={timeLeft.seconds} label="Seconds" />
+            <h1 className="paviii-wordmark" aria-label="PAVIII">
+              {"Pavithra".split("").map((letter, index) => (
+                <span
+                  key={`${letter}-${index}`}
+                  style={{ "--i": index }}
+                >
+                  {letter}
+                </span>
+              ))}
+            </h1>
+
+            <div className="paviii-heart" aria-hidden="true">
+              ♡
             </div>
 
-            <p className="date-note">
-              Until October 23, 2026
+            <p className="paviii-tagline">
+              A SPECIAL WORLD FOR YOU
             </p>
-          </>
-        )}
+          </div>
 
-        <div className="divider">
-          <span>♡</span>
-        </div>
+          {countdown !== null && countdown > 0 && (
+            <div className="intro-countdown" key={countdown}>
+              <span className="countdown-label">
+                THE STORY BEGINS IN
+              </span>
+              <span className="countdown-number">
+                {countdown}
+              </span>
+              <span className="countdown-line" />
+            </div>
+          )}
 
-        <p className="bottom-message">
-          Made with love, just for you.
-        </p>
+          {countdown === 0 && (
+            <div className="intro-countdown countdown-finale" key="finale">
+              <span className="countdown-label">
+                WELCOME TO HER WORLD
+              </span>
+              <span className="countdown-heart" aria-hidden="true">
+                ♡
+              </span>
+            </div>
+          )}
 
-        <p className="signature">
-          Someone who loves you ♡
-        </p>
-      </section>
+          <div className="intro-bottom">
+            <span className="intro-made-with-love">
+              MADE WITH LOVE <span aria-hidden="true">♡</span>
+            </span>
+
+            <button
+              type="button"
+              className="intro-skip"
+              onClick={skipIntro}
+            >
+              SKIP INTRO <span aria-hidden="true">↗</span>
+            </button>
+          </div>
+        </section>
+      )}
 
       <audio
         ref={audioRef}
@@ -128,50 +151,31 @@ function App() {
         preload="auto"
         onPlay={() => setIsPlaying(true)}
         onPause={() => setIsPlaying(false)}
+        onEnded={() => setIsPlaying(false)}
       />
 
-      <button
-        type="button"
-        className={`music-button ${isPlaying ? "playing" : ""}`}
-        onClick={toggleMusic}
-        aria-label={
-          isPlaying ? "Pause birthday song" : "Play birthday song"
-        }
-      >
-        <span className="music-icon" aria-hidden="true">
-          {isPlaying ? "Ⅱ" : "♫"}
-        </span>
-
-        <span>
-          {isPlaying ? "Pause our song" : "Play our song"}
-        </span>
-
-        {isPlaying && (
-          <span className="music-heart" aria-hidden="true">
-            ♡
+      {!showIntro && (
+        <button
+          type="button"
+          className={`music-button ${isPlaying ? "playing" : ""}`}
+          onClick={toggleMusic}
+          aria-label={
+            isPlaying ? "Pause birthday song" : "Play birthday song"
+          }
+        >
+          <span className="music-icon" aria-hidden="true">
+            {isPlaying ? "Ⅱ" : "♫"}
           </span>
-        )}
-      </button>
-
-      <footer className="page-footer">
-        A little love, wrapped in a countdown ♡
-      </footer>
+          <span>
+            {isPlaying ? "Pause our song" : "Play our song"}
+          </span>
+          {isPlaying && (
+            <span className="music-heart" aria-hidden="true">
+              ♡
+            </span>
+          )}
+        </button>
+      )}
     </main>
   );
 }
-
-function TimeBox({ value, label }) {
-  return (
-    <div className="time-box">
-      <span className="time-value">
-        {String(value).padStart(2, "0")}
-      </span>
-
-      <span className="time-label">
-        {label}
-      </span>
-    </div>
-  );
-}
-
-export default App;
