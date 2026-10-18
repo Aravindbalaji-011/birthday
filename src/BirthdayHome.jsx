@@ -184,12 +184,8 @@ export default function BirthdayHome() {
               </h2>
 
               <p className="party-wish-text">
-                May your days be filled with laughter, your heart with
-                peace, and your life with endless reasons to smile.
-                May every dream you carry come a little closer to
-                reality. You deserve beautiful moments, genuine
-                happiness, and all the love this world has to offer.
-                Keep shining and being the wonderful person you are.
+                Iniya pirantha nal vaazhthukkal,pavi ,,jolly a iruuuuu
+                lOvee you diiiiii
                 Happy Birthday! ♥
               </p>
             </div>
