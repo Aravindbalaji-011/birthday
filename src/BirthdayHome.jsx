@@ -284,17 +284,15 @@ export default function BirthdayHome() {
             <p className="letter-text">
               {`Happy Birthday, Paviii! ♥
 
-I wanted to make something a little different for your special day, something you could open and remember with a smile.
-
-I hope this new year of your life brings you happiness, courage, success, and countless beautiful surprises. Never forget how special you are and how much you deserve the very best.
-
-Keep smiling, keep dreaming, and keep being you. May this birthday be the beginning of a wonderful chapter filled with memories you will treasure forever.
-
-Enjoy your special day to the fullest. You deserve all the happiness in the world. 🎂✨`}
+Hiii di, 
+I hope u like this suprise i made for you. not just for birthday, I want you to feel happy and active like before.
+hope you get well mentally..thats it and Munadi you asked what made you like me tu....Enaku athu theriala but for now i really love your Ass..avolo than
+And vera enna sola ..avolo tha once again happy bithday di..I love you so much and I will be always with you....then lastly
+     ||Blade melaa vachha nambikai a unmela vaaii chellam||`}
             </p>
 
             <div className="love-letter-signature">
-              With lots of love, ♡
+              I lOVE YOU, ♡
             </div>
           </article>
         </main>
